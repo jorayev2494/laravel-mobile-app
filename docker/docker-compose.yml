@@ -1,0 +1,170 @@
+version: "3.7"
+
+x-php: &php_cli
+    build: 
+        context: ./php_cli
+        dockerfile: dockerfile
+    restart: unless-stopped
+    volumes: 
+        - ../:/var/project
+    working_dir: /var/project
+    depends_on: 
+        - php
+    links: 
+        - php
+
+# x-ngx_proxy: $ngx_proxy
+#     build: 
+#         context: ./nginx_proxy
+#         dockerfile: dockerfile
+#     restart: unless-stopped
+#     volumes: 
+#         - ../:/var/project
+#     depends_on: 
+#         - ngx
+#     links: 
+#         - ngx
+
+
+services: 
+    # Nginx Service
+    ngx:
+        build: 
+            context: ./nginx
+            dockerfile: dockerfile
+        container_name: ${COMPOSE_PROJECT_NAME}-ngx
+        restart: unless-stopped
+        tty: true
+        volumes: 
+            - ../:/var/project
+        ports: 
+            - ${NGX_PORT}:80
+        depends_on: 
+            - php
+        links: 
+            - php
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # Node Service
+    node:
+        build: 
+            context: ./node
+            dockerfile: dockerfile
+        container_name: ${COMPOSE_PROJECT_NAME}-node
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ../:/var/project
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # PHP Service
+    php:
+        build:
+            context: ./php
+            dockerfile: dockerfile
+        container_name: ${COMPOSE_PROJECT_NAME}-php
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ../:/var/project
+        depends_on: 
+            - mysql
+        links: 
+            - mysql
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # MySQL Service
+    mysql:
+        image: mysql:5.7
+        container_name: ${COMPOSE_PROJECT_NAME}-mysql
+        restart: unless-stopped
+        tty: true
+        # volumes: 
+        #     - ./mysql/data:/var/lib/mysql
+        ports: 
+            - ${MYSQL_PORT}:3306
+        environment: 
+            - MYSQL_DATABASE=laravel-mobile-app
+            - MYSQL_ROOT_PASSWORD=laravel
+        command: [
+                'mysqld', 
+                '--character-set-server=utf8mb4',
+                '--collation-server=utf8mb4_unicode_ci'
+            ]
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # REDIS Service
+    redis:
+        image: redis:latest
+        container_name: ${COMPOSE_PROJECT_NAME}-redis
+        restart: unless-stopped
+        ports: 
+            - ${REDIS_PORT}:6379
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # CRON Service
+    # cron:
+    #     build:
+    #         context: ./cron
+    #         dockerfile: dockerfile
+    #     container_name: ${COMPOSE_PROJECT_NAME}-cron
+    #     restart: unless-stopped
+    #     volumes: 
+    #         - ../:/var/project
+    #     working_dir: /var/project
+    #     networks: 
+    #         - laravel-${COMPOSE_PROJECT_NAME}
+
+    # Horizon Service   composer require laravel/horizon --ignore-platform-reqs
+    horizon:
+        <<: *php_cli
+        container_name: ${COMPOSE_PROJECT_NAME}-horizon
+        command: ['php', 'artisan', 'horizon']
+        links: 
+            - redis:redis
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+
+    # Queue Worker Service
+    queue_worker:
+        <<: *php_cli
+        container_name: ${COMPOSE_PROJECT_NAME}-queue-worker
+        command: ['php', 'artisan', 'queue:work', '--sleep=1', '--queue=default']
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+        
+    # Queue Worker Emails Service
+    queue_worker_email:
+        <<: *php_cli
+        container_name: ${COMPOSE_PROJECT_NAME}-queue-worker-email
+        command: ['php', 'artisan', 'queue:work', '--sleep=2', '--queue=emails']
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # Queue Worker Jobs Service
+    queue_worker_job:
+        <<: *php_cli
+        container_name: ${COMPOSE_PROJECT_NAME}-queue-worker-jobs
+        command: ['php', 'artisan', 'queue:work', '--sleep=3', '--queue=jobs']
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # MailServer Service
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: ${COMPOSE_PROJECT_NAME}_mailhog
+        ports:
+          - ${MAILHOG_INTERFACE_PORT}:${MAILHOG_INTERFACE_PORT}
+          - ${MAILHOG_PORT}:${MAILHOG_PORT}
+        networks:
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+networks: 
+    laravel-mobile-app:
+        driver: bridge
