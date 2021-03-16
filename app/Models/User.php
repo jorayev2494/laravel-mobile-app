@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Contracts\AuthorizeModelInterface;
 use App\Models\Contracts\JWTAuthModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * User Model
@@ -87,4 +88,9 @@ class User extends JWTAuthModel implements AuthorizeModelInterface
         'last_login',
         'last_activity',
     ];
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class, "author_id", "id");
+    }
 }

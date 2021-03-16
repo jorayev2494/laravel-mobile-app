@@ -20,7 +20,4 @@ Route::get('/', static function(): View {
     return view('welcome');
 });
 
-Route::get('/test/cache', ['uses' => 'TestController@test', 'as' => 'test.cache']);
-Route::get('/test/jobs/{userId}', ['uses' => 'TestController@testJobs', 'as' => 'test.cache']);
-Route::get('/test/service', ['uses' => 'TestController@service', 'as' => "service"]);
-Route::post('/test/test/test', ['uses' => 'TestController@testTwo', 'as' => 'test.test']);
+// Route::post('/test', ['uses' => 'TestController', 'as' => 'test']);

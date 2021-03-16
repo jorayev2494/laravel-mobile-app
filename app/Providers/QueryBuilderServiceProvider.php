@@ -42,7 +42,10 @@ class QueryBuilderServiceProvider extends ServiceProvider
             return $builder;
         });
 
-        Builder::macro('requestPaginate', function(array $columns = ['*']) use($pipeline): LengthAwarePaginator|Collection {
+
+        Builder::macro(
+            'requestPaginate',
+            function(array $columns = ['*']) use($pipeline): mixed {
             $result = $pipeline->send($this->applyScopes()->select($columns))
                      ->through(
                         Paginate::class

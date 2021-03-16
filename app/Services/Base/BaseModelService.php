@@ -2,14 +2,20 @@
 
 namespace App\Services\Base;
 
+use App\Exceptions\BadRequestException;
 use App\Repositories\Eloquent\Base\BaseModelRepository;
-use Exception;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 
 abstract class BaseModelService
 {
+
+    /**
+    * @var const GATE_DOESNT_RIGHTS_MSG
+    */
+    private const GATE_DOESNT_RIGHTS_MSG = "you don't have enough rights";
+
     /**
     * @var Application $app
     */
@@ -32,8 +38,9 @@ abstract class BaseModelService
         /** @var BaseModelRepository $modelRepository */
         $modelRepository = $this->app->make($this->getModelRepository());
         if (!$modelRepository instanceof BaseModelRepository) {
-            throw new \Exception("Class {$this->getModelRepository()}
-            must be an instance of Illuminate\\Database\\Eloquent\\" . BaseModelRepository::class);
+            throw new \Exception(
+                "Class {$this->getModelRepository()} must be an instance of Illuminate\\Database\\Eloquent\\" . BaseModelRepository::class
+            );
         }
 
         return $this->modelRepository = $modelRepository;
@@ -73,14 +80,20 @@ abstract class BaseModelService
      * @param array $data
      * @return Model
      */
-    public function update(int $id, array $data): Model
+    public function update(int $id, array $data, bool $hasModelPolicy = false): Model
     {
         if (array_key_exists('id', $data)) 
             unset($data['id']);
 
         return tap(
             $this->getCloneModelRepository()->getModelClone()->findOrFail($id),
-            fn(Model $foundModel): Model => $foundModel->fill($data)
+            function(Model $foundModel) use($data, $hasModelPolicy): Model {
+                if ($hasModelPolicy && Gate::denies("update", $foundModel)) {
+                    throw new BadRequestException(self::GATE_DOESNT_RIGHTS_MSG);
+                }
+
+                return $foundModel->fill($data);
+            } 
         );
     }
 
@@ -90,12 +103,15 @@ abstract class BaseModelService
      * @param integer $id
      * @return boolean
      */
-    public function delete(int $id): bool
+    public function delete(int $id, bool $hasModelPolicy = false): bool
     {
-        return tap(
-            $this->getCloneModelRepository()->getModelClone()->newQuery()->findOrFail($id),
-            fn(Model $foundModel): bool => $foundModel->delete()
-        );
+        $foundModel = $this->getCloneModelRepository()->getModelClone()->newQuery()->findOrFail($id);
+
+        if ($hasModelPolicy && Gate::denies("delete", $foundModel)) {
+            throw new BadRequestException(self::GATE_DOESNT_RIGHTS_MSG);
+        }
+
+        return $foundModel->delete();
     }
     #endregion
 }

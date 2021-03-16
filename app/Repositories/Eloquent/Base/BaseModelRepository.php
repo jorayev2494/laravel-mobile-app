@@ -45,7 +45,13 @@ abstract class BaseModelRepository
         return $this->getModelClone()->newQuery()->where($field, $value)->get($columns);
     }
 
-    public function paginateOrGet($columns = ['*']): LengthAwarePaginator|Collection
+    /**
+     * Paginate or Get
+     *
+     * @param array $columns
+     * @return LengthAwarePaginator|Collection
+     */
+    public function paginateOrGet($columns = ['*']): mixed
     {
         return $this->getModelClone()->newQuery()->requestPaginate($columns);
     }

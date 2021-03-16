@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/test/test/test', ['uses' => 'TestController@testTwo', 'as' => 'test.test']);
+#region Public links
+Route::get('/categories', ['uses' => 'PublicAPIController@categories', 'as' => 'categories']);
+Route::get('/products', ['uses' => 'PublicAPIController@products', 'as' => 'products']);
+#endregion
 
 // Authorize Route
 Route::group(['prefix' => 'auth', 'namespace' => 'Auth', 'as' => 'auth.'], static function(): void {
@@ -38,6 +41,6 @@ Route::group(['middleware' => ['auth:' . \App\Services\Base\AppGuardInterface::U
     Route::put('/account/password/change', ['uses' => 'AccountController@passwordChange', 'as' => 'account.password.change']);
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], static function(): void {
-         
+         Route::apiResource('/address', 'AddressController');
     });
 });
