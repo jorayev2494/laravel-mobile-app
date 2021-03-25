@@ -9,7 +9,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Paginate extends QueryBuilderAbstract
 {
-    protected function action(Builder $query, string $methodName): LengthAwarePaginator|Collection
+    /**
+     * Undocumented function
+     *
+     * @param Builder $query
+     * @param string $methodName
+     * @return LengthAwarePaginator|Collection
+     */
+    protected function action(Builder $query, string $methodName): object
     {
         if ($this->request->query->has('current_page')) {
             $perPage = $this->request->query('per_page', 10);

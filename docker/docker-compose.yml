@@ -46,19 +46,6 @@ services:
         networks: 
             - laravel-${COMPOSE_PROJECT_NAME}
 
-    # Node Service
-    node:
-        build: 
-            context: ./node
-            dockerfile: dockerfile
-        container_name: ${COMPOSE_PROJECT_NAME}-node
-        restart: unless-stopped
-        tty: true
-        volumes:
-            - ../:/var/project
-        networks: 
-            - laravel-${COMPOSE_PROJECT_NAME}
-
     # PHP Service
     php:
         build:
@@ -94,6 +81,19 @@ services:
                 '--character-set-server=utf8mb4',
                 '--collation-server=utf8mb4_unicode_ci'
             ]
+        networks: 
+            - laravel-${COMPOSE_PROJECT_NAME}
+
+    # Node Service
+    node:
+        build: 
+            context: ./node
+            dockerfile: dockerfile
+        container_name: ${COMPOSE_PROJECT_NAME}-node
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ../:/var/project
         networks: 
             - laravel-${COMPOSE_PROJECT_NAME}
 

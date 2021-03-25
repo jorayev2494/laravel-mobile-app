@@ -24,6 +24,7 @@ class ProductResource extends JsonResource
             "rating" => $this->rating,
             "is_active" => $this->is_active,
             "created_at" => $this->created_at->diffForHumans(),
+            "images" => FileResource::collection($this->whenLoaded("images"))
         ];
     }
 }

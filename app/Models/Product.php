@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Product extends Model
 {
     use HasFactory;
+
+    public const IMAGE_PATH = "/images/products";
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +19,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
+        "category_id",
         "title",
         "price",
         "sale_price",
@@ -40,5 +44,10 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, "category_id", "id");
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(File::class, "fileable");
     }
 }

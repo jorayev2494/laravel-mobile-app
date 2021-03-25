@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * File
@@ -26,11 +27,29 @@ class File extends Model
      * @var array
      */
     protected $fillable = [
-        'type',
-        'path',
-        'name',
-        'size',
-        'mime_type',
-        'user_file_name'
+        "type",
+        "path",
+        "name",
+        "size",
+        "mime_type",
+        "user_file_name"
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        "fileable_type",
+        "fileable_id",
+        "updated_at",
+        "created_at",
+    ];
+
+
+    public function fileable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

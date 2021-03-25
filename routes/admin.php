@@ -24,7 +24,11 @@ Route::group(['middleware' => ['auth:' . \App\Services\Base\AppGuardInterface::A
     Route::put('/account/password/change', ['uses' => 'AccountController@passwordChange', 'as' => 'account.password.change']);
 
     Route::group(['prefix' => 'managements', 'namespace' => 'Managements', 'as' => 'managements.'], static function(): void {
+        // Users Management
         Route::resource('/users', 'UserController', ['except' => 'store']);
         Route::put('/users/block/{id}', ['uses' => 'UserManagementController@block', 'as' => 'user.block']);
+
+        // Products Management
+        Route::apiResource('/products', 'ProductManagementController');
     });
 });
