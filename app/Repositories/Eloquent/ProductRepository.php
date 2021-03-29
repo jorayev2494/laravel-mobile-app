@@ -13,8 +13,13 @@ class ProductRepository extends BaseModelRepository
         return Product::class;
     }
 
+    public function loadForManagement(string $sortBy = "DESC"): Collection
+    {
+        return $this->getModelClone()->newQuery()->orderBy("id", $sortBy)->with("images")->requestPaginate();
+    }
+
     public function loadActive(): Collection
     {
-        return $this->getModelClone()->newQuery()->where('is_active', true)->get();
+        return $this->getModelClone()->newQuery()->where('is_active', true)->with("images")->get();
     }
 }

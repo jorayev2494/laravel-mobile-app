@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources\Collections;
 
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\FileResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Collection;
 
 class ProductCollection extends ResourceCollection
 {

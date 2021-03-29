@@ -27,6 +27,9 @@ Route::group(['middleware' => ['auth:' . \App\Services\Base\AppGuardInterface::A
         // Users Management
         Route::resource('/users', 'UserController', ['except' => 'store']);
         Route::put('/users/block/{id}', ['uses' => 'UserManagementController@block', 'as' => 'user.block']);
+        
+        // Category Management
+        Route::apiResource('/categories', 'CategoryManagementController');
 
         // Products Management
         Route::apiResource('/products', 'ProductManagementController');

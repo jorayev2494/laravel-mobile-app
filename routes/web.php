@@ -14,10 +14,10 @@ use Illuminate\View\View;
 |
 */
 
-Route::get('/', static function(): View {
-    phpversion();
-    phpinfo();
-    return view('welcome');
-});
+Route::get("/{any}", static function(): View {
+    // phpversion();
+    // phpinfo();
+    return view("welcome");
+})->where("any", ".*");
 
 // Route::post('/test', ['uses' => 'TestController', 'as' => 'test']);

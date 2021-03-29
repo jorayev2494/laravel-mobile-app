@@ -63,7 +63,7 @@ trait FileTrait
      */
     protected function deleteFile(string $path, string $deleteFileName, string $disc = 'public'): bool
     {
-        if (!Str::contains($deleteFileName, 'default.') && Storage::disk($disc)->exists($path)) {
+        if (!Str::contains($deleteFileName, 'default.') && Storage::disk($disc)->exists($path) && !filter_var($deleteFileName, FILTER_VALIDATE_URL)) {
             return Storage::disk($disc)->delete($path . '/' . $deleteFileName);
         }
 

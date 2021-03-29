@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        $users = $this->userManagementService->getCloneModelRepository()->getModelClone()->where('is_blocked', true)->requestPaginate();
+        $users = $this->userManagementService->loadForManagement("DESC");
         return response()->json(UserCollection::make($users));
     }
 

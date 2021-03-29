@@ -47,6 +47,10 @@ class File extends Model
         "created_at",
     ];
 
+    public function getPathAttribute(): string
+    {
+        return "/storage{$this->attributes['path']}";
+    }
 
     public function fileable(): MorphTo
     {

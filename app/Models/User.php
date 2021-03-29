@@ -61,7 +61,8 @@ class User extends JWTAuthModel implements AuthorizeModelInterface
      * @var array
      */
     protected $appends = [
-        'avatar_url'
+        "avatar_url",
+        "full_name"
     ];
 
     /**
@@ -88,6 +89,11 @@ class User extends JWTAuthModel implements AuthorizeModelInterface
         'last_login',
         'last_activity',
     ];
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->attributes['first_name']} {$this->attributes['last_name']}";
+    }
 
     public function addresses(): HasMany
     {

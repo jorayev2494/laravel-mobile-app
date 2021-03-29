@@ -20,6 +20,16 @@ class ProductService extends BaseModelService
     */
     private ProductRepository $repository;
 
+    /**
+    * @var FileService $fileService
+    */
+    private FileService $fileService;
+
+    public function __construct(FileService $fileService) {
+        $this->fileService = $fileService;
+        parent::__construct(app());
+    }
+
     protected function getModelRepository(): string
     {
         $this->repository = resolve(ProductRepository::class);
@@ -33,12 +43,13 @@ class ProductService extends BaseModelService
 
     public function getProducts(): mixed
     {
-        return $this->repository->paginateOrGet();
+        return $this->repository->loadForManagement("DESC");
     }
 
     public function storeProduct(array $data): Model
     {
-        $images = $this->uploadImages($data, "images");
+        $data = $this->parseType($data);
+        $images = $this->fileService->uploads($data, Product::IMAGE_PATH, "images");
         /** @var Product $storedProduct */
         $storedProduct = $this->create($data);
         $storedProduct->images()->createMany($images);
@@ -54,8 +65,9 @@ class ProductService extends BaseModelService
     {
         /** @var Product $foundProduct */
         $foundProduct = $this->repository->find($id);
-        
-        $images = $this->updateImages($foundProduct, $data);
+        $data = $this->parseType($data);
+
+        $images = $this->fileService->updateFiles($foundProduct, $data, Product::IMAGE_PATH);
         $foundProduct->update($data);
         $foundProduct->images()->createMany($images);
 
@@ -65,43 +77,26 @@ class ProductService extends BaseModelService
     public function deleteProduct(int $id): void
     {
         $foundProduct = $this->repository->find($id);
-        $this->deleteImages($foundProduct);
+        $this->fileService->remove($foundProduct, "images");
         $foundProduct->delete();
     }
 
-    private function uploadImages(array $data, string $key): array
+    private function parseType(array $data): array
     {
-        $images = [];
-
-        if (array_key_exists($key, $data)) {
-            foreach ($data[$key] as $img) {
-                $images[] = $this->uploadFile(Product::IMAGE_PATH, $img);
+        foreach ($data as $key => $value) {
+            switch ($value) {
+                case "true": 
+                    $data[$key] = true;
+                    break;
+                case "false": 
+                    $data[$key] = false; 
+                    break;
+                default:
+                    $data[$key] = $value; 
+                    break;
             }
         }
 
-        return $images;
-    }
-
-    private function updateImages(Product $product, array $data): array
-    {
-        $images = [];
-        if (array_key_exists("images", $data)) {
-            $this->deleteImages($product);
-            $images = $this->uploadImages($data, "images");
-        }
-
-        return $images;
-    }
-
-
-    private function deleteImages(Product $product): void
-    {
-        if ($productImages = $product->images) {
-            /** @var File $img */
-            foreach ($productImages as $img) {
-                $this->deleteFile($img->path, $img->name);
-                $img->delete();
-            }
-        }
+        return $data;
     }
 }

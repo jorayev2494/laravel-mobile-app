@@ -30,7 +30,7 @@ class AddressController extends Controller
         $this->middleware("auth:" . AppGuardInterface::USER_GUARD);
         $this->authUser = Auth::guard(AppGuardInterface::USER_GUARD)->user();
         $this->addressService = $addressService;
-        // $this->authorizeResource(Address::class);
+        $this->authorizeResource(Address::class);
     }
     
     /**

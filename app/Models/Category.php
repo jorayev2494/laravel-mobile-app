@@ -18,6 +18,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    public const IMAGE_PATH = "/images/categories";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -38,6 +40,12 @@ class Category extends Model
     protected $casts = [
         "is_active" => "boolean",
     ];
+
+    public function getImageAttribute(): string
+    {
+        $image = $this->attributes["image"];
+        return filter_var($image, FILTER_VALIDATE_URL) ? $image : "/storage" . Category::IMAGE_PATH . "/" . $image;
+    }
 
     public function products(): HasMany
     {

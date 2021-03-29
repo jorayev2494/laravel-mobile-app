@@ -10,9 +10,21 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "axios": "^0.21",
-        "laravel-mix": "^6.0.6",
+        "@babel/core": "^7.13.13",
+        "@babel/preset-env": "^7.13.12",
+        "@vue/compiler-sfc": "^3.0.5",
+        "axios": "^0.21.1",
+        "babel-loader": "^8.2.2",
+        "laravel-mix": "^6.0.0-beta.17",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "vue": "^3.0.7",
+        "vue-loader": "^16.1.2",
+        "webpack": "^5.28.0"
+    },
+    "dependencies": {
+        "advanced-laravel-vue-paginate": "^0.3.0",
+        "laravel-vue-pagination": "^2.3.1",
+        "vue-router": "^4.0.5",
+        "vuex": "^4.0.0"
     }
 }
