@@ -37,6 +37,11 @@
                         name: 'managements.products',
                         icon: 'icon-head',
                         title: 'Продукты'
+                    },
+                    {
+                        name: 'managements.carts',
+                        icon: 'icon-head',
+                        title: 'Заказы'
                     }
                 ]
             }

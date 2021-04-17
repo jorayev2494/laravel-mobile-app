@@ -22,4 +22,9 @@ class ProductRepository extends BaseModelRepository
     {
         return $this->getModelClone()->newQuery()->where('is_active', true)->with("images")->get();
     }
+
+    public function foundProducts(array $ids, array $columns = ["*"]): Collection
+    {
+        return $this->getModelClone()->newQuery()->findMany($ids, $columns);
+    }
 }

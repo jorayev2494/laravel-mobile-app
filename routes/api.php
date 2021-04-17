@@ -43,4 +43,6 @@ Route::group(['middleware' => ['auth:' . \App\Services\Base\AppGuardInterface::U
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], static function(): void {
          Route::apiResource('/address', 'AddressController');
     });
+
+    Route::apiResource('/carts', 'CartController', ['except' => 'update']);
 });

@@ -120,13 +120,18 @@ const routes = [
                     {
                         name: 'managements.products.create',
                         path: '/managements/products/create',
-                        props: true,
+                        meta: { 
+                            middleware: ['auth']
+                        },
                         component: () => import('../components/templates/managements/products/ProductCreateComponent.vue'),
                     },
                     {
                         name: 'managements.products.show',
                         path: '/managements/products/:id',
                         props: true,
+                        meta: { 
+                            middleware: ['auth']
+                        },
                         component: () => import('../components/templates/managements/products/ProductShowComponent.vue'),
                     },
                 ]
@@ -137,6 +142,30 @@ const routes = [
                 name: 'managements.orders',
                 path: '/managements/orders',
                 component: () => import('../components/templates/managements/orders/OrdersComponent.vue'),
+            },
+
+            // Carts
+            {
+                name: 'managements.carts',
+                path: '/managements/carts',
+                redirect: { name: 'managements.carts.view' },
+                component: () => import('../components/templates/managements/carts/CartsComponent.vue'),
+                meta: { 
+                    middleware: ['auth']
+                },
+                children: [
+                    {
+                        path: '/managements/carts/list',
+                        name: 'managements.carts.view',
+                        component: () => import('../components/templates/managements/carts/CartsListComponent.vue'),
+                    },
+                    {
+                        name: 'managements.carts.show',
+                        path: '/managements/carts/show/:id',
+                        props: true,
+                        component: () => import('../components/templates/managements/carts/CartsShowComponent.vue'),
+                    },
+                ]
             },
         ]
     },

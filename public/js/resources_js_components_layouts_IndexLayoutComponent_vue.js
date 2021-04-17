@@ -117,6 +117,10 @@ __webpack_require__.r(__webpack_exports__);
         name: 'managements.products',
         icon: 'icon-head',
         title: 'Продукты'
+      }, {
+        name: 'managements.carts',
+        icon: 'icon-head',
+        title: 'Заказы'
       }]
     };
   }

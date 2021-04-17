@@ -99,4 +99,9 @@ class User extends JWTAuthModel implements AuthorizeModelInterface
     {
         return $this->hasMany(Address::class, "author_id", "id");
     }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class, "author_id", "id");
+    }
 }

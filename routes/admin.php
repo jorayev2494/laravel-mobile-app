@@ -33,5 +33,9 @@ Route::group(['middleware' => ['auth:' . \App\Services\Base\AppGuardInterface::A
 
         // Products Management
         Route::apiResource('/products', 'ProductManagementController');
+
+        // Orders Management
+        Route::apiResource('/carts', 'CartManagementController');
+        Route::put('/carts/{id}/change_status', ['uses' => 'CartManagementController@changeStatus', 'as' => 'carts.change_status']);
     });
 });

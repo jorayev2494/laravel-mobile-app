@@ -6,6 +6,7 @@ import authorize from './modules/authorize/index.js';
 import users from './modules/users/index.js';
 import category from './modules/category/index.js';
 import product from './modules/product/index.js';
+import cart from './modules/cart/index.js';
 // #endregion
 
 const store = new Vuex.Store({
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
         authorize,
         users,
         category,
-        product
+        product,
+        cart
     }
 });
 
