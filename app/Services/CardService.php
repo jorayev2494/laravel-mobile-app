@@ -18,6 +18,11 @@ class CardService extends BaseModelService
     */
     private CardRepository $repository;
 
+    public function __construct(CardRepository $repository = null) {
+        $this->repository = $repository;
+        parent::__construct(app());
+    }
+
     protected function getModelRepository(): string
     {
         return CardRepository::class;
