@@ -37,6 +37,7 @@ abstract class BaseModelService
     {
         /** @var BaseModelRepository $modelRepository */
         $modelRepository = $this->app->make($this->getModelRepository());
+        
         if (!$modelRepository instanceof BaseModelRepository) {
             throw new \Exception(
                 "Class {$this->getModelRepository()} must be an instance of Illuminate\\Database\\Eloquent\\" . BaseModelRepository::class
