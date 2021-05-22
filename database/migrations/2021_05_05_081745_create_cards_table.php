@@ -17,8 +17,13 @@ class CreateCardsTable extends Migration
             $table->id();
             
             $table->bigInteger('author_id')->unsigned();            
-            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');            
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
+            
             $table->string('code', 255);
+            $table->date('expires_end')->nullable();            
+            $table->integer('security_code')->unsigned();            
+            $table->string('type_card', 50)->default('visa');            
+            
 
             $table->timestamps();
         });

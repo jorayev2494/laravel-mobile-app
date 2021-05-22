@@ -36,6 +36,15 @@ class File extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'url'
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -55,5 +64,10 @@ class File extends Model
     public function fileable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return "{$this->path}/{$this->attributes['name']}";
     }
 }

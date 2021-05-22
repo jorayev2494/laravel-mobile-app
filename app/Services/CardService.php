@@ -9,6 +9,7 @@ use App\Repositories\Eloquent\CardRepository;
 use App\Services\Base\BaseModelService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class CardService extends BaseModelService
 {
@@ -35,7 +36,7 @@ class CardService extends BaseModelService
 
     public function storeCard(User $user, array $data): Model
     {
-        return $user->cards()->create($data);
+        return $user->cards()->create($this->parseDate($data));
     }
 
     public function showCard(int $id): Model
@@ -46,12 +47,21 @@ class CardService extends BaseModelService
     public function updateCard(User $user, int $id, array $data) {
         /** @var Card $foundCard */
         $foundCard = $user->cards()->findOrFail($id);
-        $foundCard->update($data);
+        $foundCard->update($this->parseDate($data));
         return $foundCard->refresh();
     }
 
     public function deleteCard(User $user, int $id): void
     {
         $user->cards()->findOrFail($id)->delete();
+    }
+
+    private function parseDate(array $data): array
+    {
+        if (array_key_exists('expires_end', $data)) {
+            $data['expires_end'] = Carbon::parse($data['expires_end']);
+        }
+
+        return $data;
     }
 }

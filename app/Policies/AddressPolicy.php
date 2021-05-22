@@ -17,9 +17,9 @@ class AddressPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -31,7 +31,7 @@ class AddressPolicy
      */
     public function view(User $user, Address $address)
     {
-        //
+        dd(__METHOD__);
     }
 
     /**
@@ -42,7 +42,7 @@ class AddressPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -78,7 +78,7 @@ class AddressPolicy
      */
     public function restore(User $user, Address $address)
     {
-        //
+        dd(__METHOD__);
     }
 
     /**
@@ -90,6 +90,6 @@ class AddressPolicy
      */
     public function forceDelete(User $user, Address $address)
     {
-        //
+        dd(__METHOD__);
     }
 }

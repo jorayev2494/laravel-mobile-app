@@ -22,9 +22,11 @@ class ProductResource extends JsonResource
             "sale_price" => $this->sale_price,
             "description" => $this->description,
             "rating" => $this->rating,
-            "is_active" => $this->is_active,
+            // "is_active" => $this->is_active,
             "created_at" => $this->created_at->diffForHumans(),
-            "images" => FileResource::collection($this->whenLoaded("images"))
+            "cover" => FileResource::make($this->whenLoaded("cover")),
+            "images" => FileResource::collection($this->whenLoaded("images")),
+            "url" => $this->url,
         ];
     }
 }

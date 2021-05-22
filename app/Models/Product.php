@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Product extends Model
 {
@@ -29,6 +30,15 @@ class Product extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'is_active'
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -38,12 +48,19 @@ class Product extends Model
     ];
 
     protected $with = [
-        "category"
+        "category",
+        "cover",
+        "images"
     ];
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, "category_id", "id");
+    }
+
+    public function cover(): MorphOne
+    {
+        return $this->morphOne(File::class, "fileable");
     }
 
     public function images(): MorphMany

@@ -10,6 +10,8 @@ class Card extends Model
 {
     use HasFactory;
 
+    public const FORMAT_DATE_EXPIRES_END = 'd/m/y';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,8 +19,28 @@ class Card extends Model
      */
     protected $fillable = [
         'author_id',
-        'code'
+        'code',
+        'expires_end',
+        'security_code',
+        'type_card'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'expires_end'
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        // parent::creating([]);
+    }
 
 
     public function author(): BelongsTo

@@ -40,7 +40,11 @@ class AddressController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(AddressResource::collection($this->authUser->addresses));
+        return response()->json(
+            AddressResource::collection(
+                $this->authUser->addresses()->orderBy('created_at', 'DESC')->get()
+            )
+        );
     }
 
     /**

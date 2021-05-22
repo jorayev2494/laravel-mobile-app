@@ -33,8 +33,8 @@ class AccountUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|alpha|string|max:50',
-            'last_name' => 'required|alpha|string|max:50',
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
             'email' => "email|unique:{$this->authAccount->getTable()},email,{$this->authAccount->id},id",
             'phone' => "string|unique:{$this->authAccount->getTable()},phone,{$this->authAccount->id},id",
             'avatar' => 'file|mimetypes:image/*',
